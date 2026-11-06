@@ -50,6 +50,34 @@
     @media(max-width:720px){.wrap{width:min(100% - 32px,560px)}.nav{height:68px}.hero{grid-template-columns:1fr;padding:53px 0 45px;gap:8px}.hero-art{min-height:285px}.paper{width:230px;height:250px}.hero h1{font-size:clamp(47px,11vw,67px)}.paper-label{margin-bottom:17px}.samples{padding:48px 0}.section-top{align-items:start;flex-direction:column;gap:12px}.sample-grid{grid-template-columns:1fr}.sample-preview{height:290px}.order-background{padding:52px 0}.order-layout{grid-template-columns:1fr}.order-intro{position:static}.tiny-steps{display:none}.order-intro p:not(.eyebrow){max-width:100%}.form-card{padding:23px 20px}}
     @media(max-width:500px){.nav-link{padding:9px 11px}.brand{font-size:20px}.brand-mark{height:36px;width:36px}.fields,.subject-list{grid-template-columns:1fr}.field.full{grid-column:auto}.payment{grid-template-columns:1fr}.qr-frame{width:176px;height:176px;margin:auto}.hero-art{min-height:245px}.paper{height:219px;width:194px}.paper-name{font-size:22px}.paper-label{margin-bottom:10px}.paper-sticker{right:-35px;bottom:12px}.form-card{padding:20px 16px}.footer-row{flex-direction:column;gap:3px}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+
+    /* Subtle editorial accents: restrained colour, soft elevation and micro-interactions. */
+    :root{--paper:#faf6f2;--plum:#633454;--plum-2:#965d7c;--rose:#f7edf0;--sage:#ecf2ec;--gold:#b58e59}
+    .hero{position:relative}.hero h1 em{background:linear-gradient(110deg,#603153,#af6a89);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero-art .art-ellipse{background:linear-gradient(135deg,#f5dce7 0%,#f1e8e7 52%,#e9eddf 100%)}
+    .primary,.submit,.pay-link{background:linear-gradient(115deg,#633454,#81466a);box-shadow:0 8px 17px rgba(95,43,79,.12);transition:transform .22s ease,box-shadow .22s ease,filter .22s ease}
+    .primary:hover,.submit:hover:not(:disabled),.pay-link:hover{transform:translateY(-2px);filter:brightness(.95);box-shadow:0 12px 24px rgba(95,43,79,.18)}
+    .brand-mark{background:linear-gradient(140deg,#633454,#9a5e7b)}
+    .sample-card{position:relative;transition:transform .35s ease,box-shadow .35s ease,border-color .35s ease;will-change:transform}
+    .sample-card:hover{transform:translateY(-7px);border-color:#dbc7d2;box-shadow:0 18px 38px rgba(87,52,69,.12)}
+    .sample-card:nth-child(4n+1) .sample-preview{background:linear-gradient(135deg,#f6e5ed,#f1e7e7)}
+    .sample-card:nth-child(4n+2) .sample-preview{background:linear-gradient(135deg,#eaf1e8,#f3ede7)}
+    .sample-card:nth-child(4n+3) .sample-preview{background:linear-gradient(135deg,#f5ecd9,#f4e8e6)}
+    .sample-card:nth-child(4n+4) .sample-preview{background:linear-gradient(135deg,#e9e9f3,#f3e5ec)}
+    .sample-card:before{content:'';position:absolute;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#a35b85,#cfaa75,#93b4a0);z-index:2}
+    .sample-card .sample-preview img{transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+    .sample-card:hover .sample-preview img{transform:scale(1.035)}
+    .sample-card.reveal-pending{opacity:0;transform:translateY(28px) scale(.975)}
+    .sample-card.reveal-pending.reveal-visible{animation:sample-rise .85s cubic-bezier(.18,.77,.23,1) both;animation-delay:var(--reveal-delay,0ms)}
+    @keyframes sample-rise{0%{opacity:0;transform:translateY(28px) scale(.975);filter:blur(3px)}65%{opacity:1;filter:blur(0)}100%{opacity:1;transform:translateY(0) scale(1);filter:none}}
+    .sample-card.reveal-visible:hover{transform:translateY(-7px)}
+    .summary-box{background:linear-gradient(120deg,#fbf7f9,#f8f8f4)}
+    .form-card{border-color:#e9d9e1}
+    .proof-status{color:#725772!important;font-weight:650;min-height:14px}
+    .alert a{color:#633454;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+    .support-link{display:inline-flex;align-items:center;gap:6px;margin:9px 0 0;padding:8px 12px;border:1px solid #c8b1bf;border-radius:8px;background:#fff;text-decoration:none!important}
+    .alert a.support-link:hover{background:#faf2f7}
+    @media(prefers-reduced-motion:reduce){.sample-card.reveal-pending{opacity:1;transform:none}.sample-card.reveal-pending.reveal-visible{animation:none}.sample-card,.primary,.submit,.pay-link,.sample-card .sample-preview img{transition:none!important}}
   </style>
 </head>
 <body>
@@ -92,8 +120,8 @@
         <div id="form-area">
           <div class="form-head"><h3>Complete your order</h3><p>Fields marked <span class="req">*</span> are required.</p></div>
           <p id="alert" class="alert" role="alert" aria-live="assertive"></p>
-          <!-- EDIT: Configure your own Google Apps Script endpoint in GOOGLE_APPS_SCRIPT_URL below. -->
-          <form id="order-form" action="" method="POST" enctype="application/x-www-form-urlencoded" target="drive-upload-frame" accept-charset="UTF-8">
+          <!-- Private order processing settings are configured in the script below. -->
+          <form id="order-form" action="" method="POST" enctype="application/x-www-form-urlencoded" target="order-response-frame" accept-charset="UTF-8">
             <input type="hidden" name="selected_notes" id="submitted-subjects">
             <input type="hidden" name="order_total" id="submitted-total">
             <input type="hidden" name="order_ref" id="submitted-ref">
@@ -149,16 +177,15 @@
               </div>
               <p class="warning">Please pay the exact displayed order total and keep a clear screenshot of your payment. Your payment is verified manually; uploading a screenshot does not automatically confirm it.</p>
               <div class="fields" style="margin-top:19px">
-                <div class="field full"><label for="proof">Upload payment screenshot <span class="req">*</span></label><div class="filebox"><input required id="proof" type="file" accept="image/jpeg,image/png,image/webp"><p>Upload a JPG, PNG or WEBP screenshot (maximum 10 MB per image). Don't share PINs, OTPs or bank passwords.</p></div></div>
+                <div class="field full"><label for="proof">Upload payment screenshot <span class="req">*</span></label><div class="filebox"><input required id="proof" type="file" accept="image/jpeg,image/png,image/webp"><p>JPG, PNG or WEBP only, up to 3 MB. Your screenshot is optimized for faster submission. Never share a PIN, OTP or password.</p><p id="proof-status" class="proof-status" role="status" aria-live="polite"></p></div></div>
               </div>
               <div class="confirmation">Your order will be reviewed manually. After your payment is verified, we'll contact you using the email or WhatsApp number above regarding your order.</div>
             </fieldset>
             <label class="tick-row" style="margin-top:25px" for="consent"><input required id="consent" type="checkbox" name="Purchase consent" value="Agreed"><span>I confirm my details are accurate and authorize their use to process this notes purchase and verify payment. <span class="req">*</span></span></label>
             <button class="submit" type="submit" id="submit-btn"><span id="submit-label">Submit order for verification</span><span aria-hidden="true">→</span></button>
-            <p class="foot">Your payment proof is sent privately to our Google Drive for manual verification, not to our public GitHub repository. Keep a copy of your screenshot.</p>
           </form>
-          <!-- Cross-origin form submit: the script responds to this hidden iframe with postMessage. -->
-          <iframe name="drive-upload-frame" id="drive-upload-frame" title="Order upload response" class="offscreen" tabindex="-1" aria-hidden="true"></iframe>
+          <!-- Hidden transport frame; delivery is checked independently. -->
+          <iframe name="order-response-frame" id="order-response-frame" title="Order upload response" class="offscreen" tabindex="-1" aria-hidden="true"></iframe>
           <div class="success" id="success" role="status" aria-live="polite"><div class="check">✓</div><h3>Your response has been submitted!</h3><p>Your payment screenshot has been saved for review. Payment is <strong>pending manual verification</strong>, not confirmed yet.</p><p id="order-reference"></p><p class="redirect-note" aria-live="polite">Redirecting you to WhatsApp in <strong id="wa-countdown">5</strong> seconds…</p><a class="primary" id="wa-order-link" target="_blank" rel="noopener noreferrer" href="#">Open WhatsApp now ↗</a><p class="wa-help">If WhatsApp does not open automatically, use the button above. You can review and send the prewritten message before it is shared.</p><a class="secondary" style="margin-top:12px" href="index.html">Return to notes</a></div>
         </div>
       </div>
@@ -196,11 +223,10 @@
   const UPI_ID = 'amang9290@ybl';
   const UPI_PAYEE_NAME = 'Aman Gupta';
   // 3) Samples 01 & 02 are included. Add sample-note-3.png and sample-note-4.png in /assets, plus YOUR payment-qr.png.
-  // 4) Paste your deployed Google Apps Script WEB APP /exec URL here (README has the steps).
-  //    Do NOT paste a Drive folder link here. Drive folder + owner email go in Code.gs.
-  const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4f9sQnnOTFm9nfM16ofyEnLABabux_drlmoj-lORFzTU39f7R_cVtZ8wxn2rHl9eH/exec';
+  // 4) Your order-processing endpoint (see the setup guide).
+  const ORDER_ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycby4f9sQnnOTFm9nfM16ofyEnLABabux_drlmoj-lORFzTU39f7R_cVtZ8wxn2rHl9eH/exec';
   // WhatsApp contact: 91 (India) + 7987623467. Use international digits, no '+' or spaces.
-  const OWNER_WHATSAPP_NUMBER = '917987623467';
+  const OWNER_WHATSAPP_NUMBER = '917987623467'; // +91 7987623467
   const WHATSAPP_REDIRECT_SECONDS = 5;
   // ============================================================================
   const byId = id => document.getElementById(id);
@@ -309,7 +335,7 @@
   const gallery=byId('sample-grid');
   SAMPLE_CATALOG.forEach((item,i)=>{
     const num=String(i+1).padStart(2,'0');
-    const card=document.createElement('article');card.className='sample-card';
+    const card=document.createElement('article');card.className='sample-card reveal-pending';card.style.setProperty('--reveal-delay',String(i*130)+'ms');
     const preview=document.createElement('div');preview.className='sample-preview';
     const img=document.createElement('img');img.loading='lazy';img.alt='PsychLogic study notes '+num+' preview';
     const fallback=document.createElement('div');fallback.className='sample-fallback';
@@ -330,6 +356,19 @@
       byId('dialog-image').src=img.src;byId('dialog-fullsize').href=img.src;dialog.showModal();
     });
   });
+  // Reveal sample 01–04 in sequence only once, when they scroll into view.
+  const sampleCards=[...gallery.querySelectorAll('.sample-card')];
+  if('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const sampleObserver=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(!entry.isIntersecting)return;
+        entry.target.classList.add('reveal-visible');
+        entry.target.addEventListener('animationend',()=>{entry.target.classList.remove('reveal-pending','reveal-visible');},{once:true});
+        sampleObserver.unobserve(entry.target);
+      });
+    },{threshold:0.08,rootMargin:'0px 0px 30px 0px'});
+    sampleCards.forEach(card=>sampleObserver.observe(card));
+  }else{sampleCards.forEach(card=>card.classList.remove('reveal-pending'));}
   const paymentQr=byId('payment-qr');
   paymentQr.addEventListener('load',()=>{if(paymentQr.naturalWidth>0){paymentQr.style.display='block';byId('qr-place').style.display='none';}});
   if(paymentQr.complete && paymentQr.naturalWidth>0){paymentQr.style.display='block';byId('qr-place').style.display='none';}
@@ -337,89 +376,212 @@
   dialog.addEventListener('click', e=>{if(e.target===dialog)dialog.close()});
   const form=byId('order-form'),button=byId('submit-btn');
   form.addEventListener('input',clearError);
-  const googleScriptReady=()=>/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(GOOGLE_APPS_SCRIPT_URL);
-  let currentNonce='', uploading=false, timeoutHandle, whatsappTimer;
-  let submittedNotes = [], whatsappUrl = '';
-  function makeWhatsAppLink(names, orderRef) {
-    // The message is made from the selected subjects, not a set of hardcoded links.
-    const message = 'Hey, I bought the following PsychLogic notes: ' + names.join(', ') + '.\n' +
-      'My order reference is ' + orderRef + '. I have uploaded my payment screenshot for verification.';
-    return 'https://wa.me/' + OWNER_WHATSAPP_NUMBER + '?text=' + encodeURIComponent(message);
+  const proofInput=byId('proof'),proofStatus=byId('proof-status');
+  const MAX_IMAGE_BYTES=3*1024*1024;
+  const TARGET_IMAGE_BYTES=850*1024;
+  const SUBMISSION_TIMEOUT=60000;
+  const endpointReady=()=>/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(ORDER_ENDPOINT_URL);
+  const supportNumber='7987623467';
+  let uploading=false,currentNonce='',activeOrderRef='',activeFingerprint='';
+  let submissionDeadline=0,submissionTimeout=null,pollTimeout=null,pollScript=null,pollScriptTimeout=null;
+  let submittedNotes=[],whatsappUrl='',whatsappTimer=null;
+  let preparedScreenshot=null,proofVersion=0,preparationPromise=Promise.resolve(null);
+
+  function supportUrl(){
+    const message='Hello PsychLogic, I paid for notes but my order confirmation is pending.'+
+      (activeOrderRef?' My reference is '+activeOrderRef+'.':'')+' Please help me verify it.';
+    return 'https://wa.me/'+OWNER_WHATSAPP_NUMBER+'?text='+encodeURIComponent(message);
   }
-  function beginWhatsAppCountdown() {
+  function supportError(message){
+    const alert=byId('alert');alert.replaceChildren();
+    const label=document.createElement('span');label.textContent=message+' ';
+    const link=document.createElement('a');link.href=supportUrl();link.className='support-link';
+    link.target='_blank';link.rel='noopener noreferrer';link.textContent='WhatsApp '+supportNumber+' ↗';
+    alert.append(label,link);alert.classList.add('show');
+    alert.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+  function readAsDataURL(blob){
+    return new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(String(reader.result));
+      reader.onerror=()=>reject(new Error('Cannot read image'));
+      reader.readAsDataURL(blob);
+    });
+  }
+  function imageFromFile(file){
+    return new Promise((resolve,reject)=>{
+      const url=URL.createObjectURL(file),img=new Image();
+      img.onload=()=>{URL.revokeObjectURL(url);resolve(img)};
+      img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('Cannot open image'))};
+      img.src=url;
+    });
+  }
+  function canvasToBlob(canvas,quality){return new Promise(resolve=>canvas.toBlob(resolve,'image/webp',quality));}
+  async function prepareScreenshot(file){
+    let chosen=file,name=file.name.slice(0,90);
+    // Optimize before Submit; keep readable payment text and only use a smaller result.
+    if(file.size>450*1024){
+      try{
+        const img=await imageFromFile(file);
+        const scale=Math.min(1,2200/Math.max(img.naturalWidth,img.naturalHeight));
+        const canvas=document.createElement('canvas');
+        canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
+        canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+        const ctx=canvas.getContext('2d');
+        if(ctx){
+          ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+          ctx.drawImage(img,0,0,canvas.width,canvas.height);
+          for(const quality of [0.86,0.78,0.68]){
+            const blob=await canvasToBlob(canvas,quality);
+            if(!blob||blob.type!=='image/webp')break;
+            if(blob.size<chosen.size){chosen=blob;name=file.name.replace(/\.[^.]+$/,'').slice(0,76)+'.webp';}
+            if(chosen.size<=TARGET_IMAGE_BYTES)break;
+          }
+        }
+        canvas.width=0;canvas.height=0;
+      }catch(_){/* Original, within the upload limit, is still acceptable. */}
+    }
+    if(chosen.size>MAX_IMAGE_BYTES)throw new Error('Screenshot exceeds 3 MB.');
+    return {file,name,bytes:chosen.size,dataUrl:await readAsDataURL(chosen)};
+  }
+  proofInput.addEventListener('change',()=>{
+    const file=proofInput.files[0],version=++proofVersion;
+    preparedScreenshot=null;
+    if(!file){proofStatus.textContent='';preparationPromise=Promise.resolve(null);return;}
+    if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>MAX_IMAGE_BYTES){
+      proofStatus.textContent='Please select a JPG, PNG or WEBP screenshot no larger than 3 MB.';
+      preparationPromise=Promise.resolve(null);return;
+    }
+    proofStatus.textContent='Optimizing screenshot…';
+    preparationPromise=prepareScreenshot(file).then(result=>{
+      if(version===proofVersion){preparedScreenshot=result;proofStatus.textContent='Screenshot ready · '+Math.round(result.bytes/1024)+' KB';}
+      return result;
+    }).catch(()=>{
+      if(version===proofVersion)proofStatus.textContent='Could not prepare screenshot. Please select another image.';
+      return null;
+    });
+  });
+  function makeWhatsAppLink(names,ref){
+    const message='Hey, I bought the following PsychLogic notes: '+names.join(', ')+'.\n'+
+      'My order reference is '+ref+'. I have uploaded my payment screenshot for verification.';
+    return 'https://wa.me/'+OWNER_WHATSAPP_NUMBER+'?text='+encodeURIComponent(message);
+  }
+  function beginWhatsAppCountdown(){
     clearInterval(whatsappTimer);
-    const link = byId('wa-order-link');
-    link.href = whatsappUrl;
-    let seconds = WHATSAPP_REDIRECT_SECONDS;
-    byId('wa-countdown').textContent = String(seconds);
-    whatsappTimer = setInterval(() => {
-      seconds -= 1;
-      byId('wa-countdown').textContent = String(Math.max(0, seconds));
-      if (seconds <= 0) {
-        clearInterval(whatsappTimer);
-        // Browser / WhatsApp may request confirmation, especially on desktop.
-        window.location.assign(whatsappUrl);
-      }
-    }, 1000);
-    link.addEventListener('click', () => clearInterval(whatsappTimer), {once:true});
+    const link=byId('wa-order-link');link.href=whatsappUrl;
+    let seconds=WHATSAPP_REDIRECT_SECONDS;
+    byId('wa-countdown').textContent=String(seconds);
+    whatsappTimer=setInterval(()=>{
+      seconds--;
+      byId('wa-countdown').textContent=String(Math.max(0,seconds));
+      if(seconds<=0){clearInterval(whatsappTimer);window.location.assign(whatsappUrl);}
+    },1000);
+    link.addEventListener('click',()=>clearInterval(whatsappTimer),{once:true});
   }
-  const releaseButton=()=>{uploading=false;button.disabled=false;byId('submit-label').textContent='Submit order for verification';clearTimeout(timeoutHandle)};
-  // Google Apps Script HTML responses send back a confirmation by postMessage.
-  // The iframe approach avoids cross-origin fetch/CORS errors on GitHub Pages.
+  function cleanupPoll(){
+    clearTimeout(pollTimeout);clearTimeout(pollScriptTimeout);clearTimeout(submissionTimeout);
+    if(pollScript){pollScript.remove();pollScript=null;}
+  }
+  function releaseButton(){uploading=false;button.disabled=false;byId('submit-label').textContent='Submit order for verification';}
+  function confirmOrder(){
+    if(!uploading)return;
+    cleanupPoll();releaseButton();byId('proof-data').value='';
+    form.hidden=true;byId('success').style.display='block';
+    byId('order-reference').textContent='Order reference: '+activeOrderRef;
+    whatsappUrl=makeWhatsAppLink(submittedNotes,activeOrderRef);
+    beginWhatsAppCountdown();byId('success').scrollIntoView({behavior:'smooth',block:'center'});
+  }
+  function failConfirmation(message){
+    if(!uploading)return;
+    cleanupPoll();releaseButton();byId('proof-data').value='';
+    supportError(message+' Please contact us before submitting again, as your order may already have been received. Reference: '+activeOrderRef+'.');
+  }
+  // The backend can confirm through a message, or through an independent status
+  // check. An iframe 'load' event alone is never treated as proof of saving.
   window.addEventListener('message',event=>{
-    if(!uploading||!event.data||event.data.type!=='psychlogic-drive-result'||event.data.nonce!==currentNonce)return;
+    let data=event.data;
+    if(typeof data==='string'){try{data=JSON.parse(data)}catch(_){return;}}
+    if(!uploading||!data||data.type!=='psychlogic-order-result'||data.nonce!==currentNonce)return;
     const host=(()=>{try{return new URL(event.origin).hostname}catch(_){return ''}})();
     if(!(host==='script.google.com'||host==='script.googleusercontent.com'||host.endsWith('.googleusercontent.com')))return;
-    if(event.data.ok===true){
-      releaseButton();byId('order-form').hidden=true;byId('success').style.display='block';
-      byId('order-reference').textContent='Order reference: '+byId('submitted-ref').value;
-      // Start the WhatsApp countdown ONLY after the backend confirms success.
-      whatsappUrl=makeWhatsAppLink(submittedNotes, byId('submitted-ref').value);
-      beginWhatsAppCountdown();
-      byId('success').scrollIntoView({behavior:'smooth',block:'center'});
-    }else{releaseButton();showError('Upload could not be confirmed. Please check your connection and try again. If you have already paid, keep your screenshot and contact us before submitting again.');}
+    if(data.ok===true)confirmOrder();
+    else if(data.ok===false)failConfirmation('The order could not be saved.');
   });
-  form.addEventListener('input',clearError);
-  form.addEventListener('submit',async e=>{
-    e.preventDefault();clearError();
+  // JSONP status endpoint contains only status, never customer personal details.
+  // It avoids cross-origin fetch/CORS issues and the fragility of iframe replies.
+  window.psychlogicOrderStatus=function(data){
+    if(!uploading||!data||data.ref!==activeOrderRef||data.nonce!==currentNonce)return;
+    clearTimeout(pollScriptTimeout);if(pollScript){pollScript.remove();pollScript=null;}
+    if(data.status==='saved'){confirmOrder();return;}
+    if(Date.now()<submissionDeadline)schedulePoll(2300);
+  };
+  function schedulePoll(delay){
+    clearTimeout(pollTimeout);
+    if(!uploading)return;
+    pollTimeout=setTimeout(checkOrderStatus,delay);
+  }
+  function checkOrderStatus(){
+    if(!uploading||Date.now()>=submissionDeadline)return;
+    if(pollScript){pollScript.remove();pollScript=null;}
+    const query=new URLSearchParams({action:'status',ref:activeOrderRef,nonce:currentNonce,callback:'psychlogicOrderStatus',_:String(Date.now())});
+    const script=document.createElement('script');pollScript=script;
+    script.src=ORDER_ENDPOINT_URL+'?'+query.toString();
+    script.async=true;
+    script.onerror=()=>{
+      if(pollScript===script){clearTimeout(pollScriptTimeout);script.remove();pollScript=null;schedulePoll(3200);}
+    };
+    pollScriptTimeout=setTimeout(()=>{
+      if(pollScript===script){script.remove();pollScript=null;schedulePoll(3200);}
+    },8500);
+    document.head.append(script);
+    byId('submit-label').textContent='Checking order confirmation…';
+  }
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();clearError();
     if(uploading)return;
     const picks=selected();
     if(!picks.length){showError('Please choose at least one psychology notes subject.');return;}
-    if(!fullyPriced()){showError('Ordering is not available yet: the store owner needs to add the subject prices.');return;}
-    if(!configured()){showError('Ordering is not available yet: the store owner needs to configure the UPI ID.');return;}
-    if(!googleScriptReady()){showError('Ordering is not available yet: the store owner must add their Google Apps Script web app URL.');return;}
+    if(!fullyPriced()){showError('Ordering is unavailable until subject prices are set.');return;}
+    if(!configured()){showError('Ordering is temporarily unavailable. Please contact us.');return;}
+    if(!endpointReady()){supportError('Online ordering is temporarily unavailable.');return;}
     validateEmail();validatePhone(phone);validatePhone(wa);
     if(!form.reportValidity())return;
-    if(!emailValid(email.value)){showError('Please enter a valid email address.');return;}
-    if(!phoneValid(phone.value)||!phoneValid(wa.value)){showError('Please enter valid mobile and WhatsApp numbers (10 to 15 digits each).');return;}
-    const proof=byId('proof').files[0];
-    if(!proof){showError('Please upload a payment screenshot.');return;}
-    if(!['image/jpeg','image/png','image/webp'].includes(proof.type)){showError('Only JPG, PNG and WEBP payment screenshots are accepted.');return;}
-    if(proof.size>10*1024*1024){showError('Please upload an image of 10 MB or less. A smaller clear screenshot works best.');return;}
-    const expected=total();
-    if(!Number.isFinite(expected)||expected<=0){showError('Please select priced notes before paying.');return;}
-    uploading=true;button.disabled=true;byId('submit-label').textContent='Uploading screenshot…';
+    if(!emailValid(email.value)||!phoneValid(phone.value)||!phoneValid(wa.value)){showError('Please check your email and phone numbers.');return;}
+    const file=proofInput.files[0];
+    if(!file){showError('Please choose a payment screenshot.');return;}
+    if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>MAX_IMAGE_BYTES){showError('Please upload a JPG, PNG or WEBP screenshot of 3 MB or less.');return;}
+    const amount=total();
+    if(!Number.isFinite(amount)||amount<=0){showError('Please select priced notes before paying.');return;}
+    if(!navigator.onLine){showError('You appear to be offline. Please reconnect before submitting.');return;}
+    uploading=true;button.disabled=true;byId('submit-label').textContent='Preparing screenshot…';
     try{
-      // Form-urlencoded base64 is compatible with Apps Script doPost(e). No browser CORS request.
-      const base64=await new Promise((resolve,reject)=>{
-        const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(new Error('read failed'));reader.readAsDataURL(proof);
-      });
+      const result=preparedScreenshot?.file===file?preparedScreenshot:
+        ((await preparationPromise)?.file===file?await preparationPromise:await prepareScreenshot(file));
+      if(!result)throw new Error('Screenshot processing failed.');
       submittedNotes=picks.map(x=>x.name);
+      const fingerprint=JSON.stringify([submittedNotes,email.value.trim(),phone.value.trim(),wa.value.trim(),amount,file.name,file.size,file.lastModified]);
+      if(fingerprint!==activeFingerprint){
+        activeFingerprint=fingerprint;
+        activeOrderRef='PL-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,8).toUpperCase();
+        currentNonce=crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2);
+      }
       byId('submitted-subjects').value=submittedNotes.join(', ');
-      byId('submitted-total').value=expected.toFixed(2);
-      byId('submitted-ref').value='PL-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,8).toUpperCase();
-      byId('proof-data').value=base64;
-      byId('proof-name').value=proof.name.slice(0,90);
-      currentNonce=(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2));
+      byId('submitted-total').value=amount.toFixed(2);
+      byId('submitted-ref').value=activeOrderRef;
       byId('request-nonce').value=currentNonce;
-      form.action=GOOGLE_APPS_SCRIPT_URL;
-      byId('submit-label').textContent='Sending order…';
-      timeoutHandle=setTimeout(()=>{
-        if(!uploading)return;
-        releaseButton();showError('We could not confirm this upload. Before resubmitting, check whether you received a confirmation or contact us with your payment screenshot and order details.');
-      },90000);
+      byId('proof-data').value=result.dataUrl;
+      byId('proof-name').value=result.name;
+      form.action=ORDER_ENDPOINT_URL;
+      byId('submit-label').textContent='Sending your order…';
+      submissionDeadline=Date.now()+SUBMISSION_TIMEOUT;
+      submissionTimeout=setTimeout(()=>failConfirmation('We could not verify your order submission.'),SUBMISSION_TIMEOUT);
+      // Start checking independently of the iframe's message.
+      schedulePoll(1800);
       HTMLFormElement.prototype.submit.call(form);
-    }catch(_){releaseButton();showError('We could not read your screenshot. Please choose the image again and retry.');}
+    }catch(_){
+      cleanupPoll();releaseButton();byId('proof-data').value='';
+      showError('We could not prepare your screenshot. Please choose another clear image and try again.');
+    }
   });
   </script>
 </body>
