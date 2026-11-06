@@ -19,6 +19,19 @@
     .payment{display:grid;grid-template-columns:165px 1fr;gap:21px;align-items:center;padding:19px;border-radius:12px;border:1px solid #e5dfde;background:#fdfbf9}.qr-frame{width:165px;height:165px;border:1px dashed #c7babd;border-radius:8px;display:grid;place-items:center;overflow:hidden;background:#fff}.qr-frame img{display:none;width:100%;height:100%;object-fit:contain}.qr-place{text-align:center;padding:10px;color:#93848d;font-size:12px}.qr-place b{font-size:24px;display:block;color:#7d6475;margin-bottom:3px}.payment h4{font-size:13px;margin:0 0 7px}.upi-line{font-size:13px;word-break:break-all;color:var(--plum);font-weight:800;margin:5px 0 8px}.copy-upi{background:#fff;border:1px solid #ded3dc;border-radius:6px;padding:6px 10px;color:var(--plum);font-size:11px;font-weight:800}.copy-upi:disabled{opacity:.45;cursor:not-allowed}.pay-link{display:inline-block;text-decoration:none;margin:9px 0 0;color:var(--plum);font-size:12px;font-weight:800}.pay-link[hidden]{display:none}.setup-hint{color:#897d84;font-size:11px;line-height:1.6;margin:5px 0 0}.warning{color:#775127;font-size:11px;background:#faf4e7;border-radius:7px;padding:10px 12px;margin:12px 0 0}.filebox{border:1px dashed #cdbecb;padding:15px;border-radius:9px;background:#fcf9fb}.filebox input[type=file]{width:100%;font-size:12px;max-width:100%}.filebox p{font-size:11px;color:var(--muted);margin:8px 0 0}.confirmation{font-size:12px;color:#5e565b;background:var(--sage);border-radius:8px;padding:12px 13px;margin-top:16px;line-height:1.7}.alert{display:none;margin:0 0 19px;background:#fff2f1;border:1px solid #f4c7c6;color:#7e3232;border-radius:9px;padding:12px 14px;font-size:12px}.alert.show{display:block}.submit{margin-top:20px;width:100%;border:0;min-height:52px;background:var(--plum);color:white;border-radius:9px;font-size:13px;font-weight:800;display:flex;justify-content:center;align-items:center;gap:12px}.submit:hover:not(:disabled){background:#48203d}.submit:disabled{cursor:wait;opacity:.65}.foot{font-size:10px;color:var(--muted);margin:12px 0 0;text-align:center}.success{display:none;text-align:center;padding:55px 10px}.success .check{width:62px;height:62px;border-radius:50%;display:grid;place-items:center;background:#e7f2e5;color:#4d734a;font-size:31px;margin:0 auto 22px}.success h3{font:normal 32px Georgia,serif;margin:0 0 11px}.success p{font-size:14px;color:var(--muted);max-width:410px;margin:0 auto 16px;line-height:1.75}.success strong{color:var(--plum)}.redirect-note{margin-top:18px!important;color:#4d3d49!important;font-weight:600}.redirect-note strong{font:700 23px Georgia,serif}.success .primary{margin:0 auto 8px}.wa-help{font-size:11px!important;max-width:420px!important;margin:12px auto!important}.success .secondary{display:inline-flex}.offscreen{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}footer{padding:24px 0;font-size:11px;color:#8b8386;border-top:1px solid var(--border)}.footer-row{display:flex;justify-content:space-between;gap:20px}
     dialog{max-width:min(880px,94vw);max-height:93vh;border:0;padding:0;background:white;border-radius:12px;box-shadow:0 20px 90px #0006}dialog::backdrop{background:#151014cf}.dialog-body{padding:12px;max-height:calc(93vh - 57px);overflow:auto;display:grid;place-items:center}.dialog-body img{max-width:100%;height:auto;max-height:calc(93vh - 90px);object-fit:contain}.dialog-header{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 14px 4px;font-size:13px;font-weight:800}.dialog-close{border:0;background:#f3eef0;border-radius:20px;width:30px;height:30px;display:grid;place-items:center;font-size:18px}
     .payment-steps{margin:12px 0 0;padding:13px 15px;border:1px solid #e9e1e7;border-radius:9px;background:#fcf9fb}
+    .payment-steps[hidden]{display:none}
+    .qr-column{display:flex;flex-direction:column;align-items:center;gap:7px}
+    .qr-help-toggle{display:flex;align-items:center;gap:5px;padding:3px 0;border:0;background:transparent;color:var(--plum);font-size:10px;font-weight:700;line-height:1.35;text-align:left}
+    .qr-help-icon{display:inline-grid;place-items:center;flex:none;width:17px;height:17px;border-radius:50%;border:1px solid #d5bfce;background:#f2e8ee;color:var(--plum);font-size:11px;font-weight:850}
+    .qr-help-toggle u{text-underline-offset:2px}
+    .upi-id-link{display:block;text-decoration:underline;text-underline-offset:3px}
+    .upi-pay-actions[hidden]{display:none}
+    .upi-pay-label{font-size:11px;font-weight:750;color:#555051;margin:14px 0 7px}
+    .pay-screenshot-note{font-size:10px;color:#897d84;line-height:1.5;margin:7px 0 0;max-width:255px}
+    .pay-link{display:inline-flex;align-items:center;justify-content:center;min-height:40px;max-width:255px;width:100%;margin:0;background:var(--plum);border:1px solid var(--plum);border-radius:8px;color:#fff;font-size:12px;font-weight:800;text-decoration:none;padding:9px 14px;transition:background .2s}
+    .pay-link:hover{background:#48203d}
+    .pay-link[aria-disabled="true"]{opacity:.75}
+
     .payment-steps-title{margin:0 0 8px;font-size:12px;font-weight:800;color:var(--plum)}
     .payment-steps ol{list-style:none;margin:0;padding:0;display:grid;gap:7px;counter-reset:paystep}
     .payment-steps li{display:flex;gap:9px;align-items:baseline;font-size:11px;color:#605860;line-height:1.5;counter-increment:paystep}
@@ -105,14 +118,28 @@
             <fieldset class="field-group"><legend class="group-title"><span>03 /</span> Educational background</legend>
               <div class="fields">
                 <div class="field"><label for="status">Current status <span class="req">*</span></label><select required id="status" name="Current status"><option value="" selected disabled>Select status</option><option>Undergraduate student</option><option>Postgraduate student</option><option>Research scholar</option><option>Working professional</option><option>Preparing for entrance exams</option><option>Other</option></select></div>
-                <div class="field full"><label for="college">College / Institution <span class="req">*</span></label><input required maxlength="170" id="college" name="College or institution" placeholder="Your college or institution" type="text"></div>
+                <div class="field full"><label for="college">College / Institution (Optional)</label><input maxlength="170" id="college" name="College or institution" placeholder="Your college or institution (optional)" type="text"></div>
               </div>
             </fieldset>
             <fieldset class="field-group"><legend class="group-title"><span>04 /</span> Pay &amp; upload proof</legend>
-              <div class="payment"><div class="qr-frame"><img id="payment-qr" src="assets/payment-qr.png" alt="UPI payment QR code"><div class="qr-place" id="qr-place"><b>⌗</b>Your UPI QR code goes here</div></div><div>
-                <h4>Pay using UPI</h4><p id="upi-id-label" class="upi-line">UPI ID not added yet</p><button type="button" class="copy-upi" id="copy-upi" disabled>Copy UPI ID</button><br><a id="pay-link" class="pay-link" href="#" hidden>Or open your UPI app to pay ↗</a><p class="setup-hint" id="payment-hint">The store owner will add the UPI ID and QR image before publishing this form.</p>
-              </div></div>
-              <div class="payment-steps" aria-label="How to pay using the QR code">
+              <div class="payment">
+                <div class="qr-column">
+                  <div class="qr-frame"><img id="payment-qr" src="assets/payment-qr.png" alt="UPI payment QR code"><div class="qr-place" id="qr-place"><b>⌗</b>Your UPI QR code goes here</div></div>
+                  <button type="button" class="qr-help-toggle" id="qr-help-toggle" aria-controls="payment-steps" aria-expanded="false"><span class="qr-help-icon" aria-hidden="true">?</span><span>How to pay with QR? <u>Click here</u></span></button>
+                </div>
+                <div>
+                  <h4>Pay using UPI</h4>
+                  <a id="upi-id-label" class="upi-line upi-id-link" href="#subjects-details" title="Pay using this UPI ID">UPI ID not added yet</a>
+                  <button type="button" class="copy-upi" id="copy-upi" disabled>Copy UPI ID</button>
+                  <div id="upi-pay-actions" class="upi-pay-actions" hidden>
+                    <p class="upi-pay-label">Pay using any UPI app</p>
+                    <a id="pay-link" class="pay-link" role="button" aria-label="Open UPI app to pay for your selected notes">Open UPI App ↗</a>
+                    <p class="pay-screenshot-note">After payment, take a screenshot and upload it below.</p>
+                  </div>
+                  <p class="setup-hint" id="payment-hint">Select your notes above to enable UPI payment.</p>
+                </div>
+              </div>
+              <div class="payment-steps" id="payment-steps" aria-label="How to pay using the QR code" hidden>
                 <p class="payment-steps-title">Pay in 3 easy steps</p>
                 <ol>
                   <li>Save or screenshot the QR code above.</li>
@@ -122,7 +149,7 @@
               </div>
               <p class="warning">Please pay the exact displayed order total and keep a clear screenshot of your payment. Your payment is verified manually; uploading a screenshot does not automatically confirm it.</p>
               <div class="fields" style="margin-top:19px">
-                <div class="field full"><label for="proof">Upload payment screenshot <span class="req">*</span></label><div class="filebox"><input required id="proof" type="file" accept="image/jpeg,image/png,image/webp"><p>Upload a JPG, PNG or WEBP screenshot (maximum 3 MB per image). Don't share PINs, OTPs or bank passwords.</p></div></div>
+                <div class="field full"><label for="proof">Upload payment screenshot <span class="req">*</span></label><div class="filebox"><input required id="proof" type="file" accept="image/jpeg,image/png,image/webp"><p>Upload a JPG, PNG or WEBP screenshot (maximum 10 MB per image). Don't share PINs, OTPs or bank passwords.</p></div></div>
               </div>
               <div class="confirmation">Your order will be reviewed manually. After your payment is verified, we'll contact you using the email or WhatsApp number above regarding your order.</div>
             </fieldset>
@@ -202,13 +229,38 @@
     byId('empty-order').hidden=items.length>0;
     byId('total-label').textContent=items.length && !valid?'Pending prices':money(amount);
     byId('price-tip').textContent=items.length && !valid?'One or more selected subjects need pricing. The store owner must add prices before orders can be accepted.':'The displayed total is calculated from the selected subjects.';
-    const payLink=byId('pay-link');
-    if(items.length && valid && configured()){
+    const payLink=byId('pay-link'), upiIdLink=byId('upi-id-label');
+    const canPay=items.length>0 && valid && configured();
+    byId('upi-pay-actions').hidden=!canPay;
+    if(canPay){
       const q=new URLSearchParams({pa:UPI_ID,pn:UPI_PAYEE_NAME,am:String(amount),cu:'INR',tn:'PsychLogic notes purchase'});
-      payLink.href='upi://pay?'+q.toString();payLink.hidden=false;
-    }else{payLink.hidden=true;payLink.removeAttribute('href')}
+      const deepLink='upi://pay?'+q.toString();
+      payLink.href=deepLink;
+      upiIdLink.href=deepLink;
+      byId('payment-hint').textContent='On your phone, tap the button to open a supported UPI app.';
+    }else{
+      payLink.removeAttribute('href');
+      upiIdLink.href='#subjects-details';
+      byId('payment-hint').textContent='Select your notes above to enable UPI payment.';
+    }
   }
   updateSummary();
+  // The UPI button appears only when at least one priced subject is selected.
+  [byId('pay-link'),byId('upi-id-label')].forEach(link=>{
+    link.addEventListener('click',event=>{
+      if(!selected().length || !fullyPriced() || !configured()){
+        event.preventDefault();
+        byId('subjects-details').scrollIntoView({behavior:'smooth',block:'center'});
+        byId('subjects-details').querySelector('summary').focus({preventScroll:true});
+      }
+    });
+  });
+  // Show the QR walkthrough only when the customer asks for help.
+  byId('qr-help-toggle').addEventListener('click',()=>{
+    const guide=byId('payment-steps'), button=byId('qr-help-toggle');
+    guide.hidden=!guide.hidden;
+    button.setAttribute('aria-expanded',String(!guide.hidden));
+  });
   byId('year').textContent=new Date().getFullYear();
   const email=byId('email'),phone=byId('phone'),wa=byId('whatsapp'),same=byId('same');
   // Validate email syntax and require a domain with a top-level domain.
@@ -246,7 +298,6 @@
   if(configured()){
     byId('upi-id-label').textContent=UPI_ID;
     byId('copy-upi').disabled=false;
-    byId('payment-hint').textContent='Use the QR or copy the UPI ID to complete your payment.';
     byId('copy-upi').addEventListener('click', async()=>{
       try{await navigator.clipboard.writeText(UPI_ID);byId('copy-upi').textContent='Copied!';setTimeout(()=>byId('copy-upi').textContent='Copy UPI ID',1600)}
       catch(_){window.prompt('Copy this UPI ID:',UPI_ID)}
@@ -344,7 +395,7 @@
     const proof=byId('proof').files[0];
     if(!proof){showError('Please upload a payment screenshot.');return;}
     if(!['image/jpeg','image/png','image/webp'].includes(proof.type)){showError('Only JPG, PNG and WEBP payment screenshots are accepted.');return;}
-    if(proof.size>3*1024*1024){showError('Please upload an image under 3 MB. A smaller clear screenshot works best.');return;}
+    if(proof.size>10*1024*1024){showError('Please upload an image of 10 MB or less. A smaller clear screenshot works best.');return;}
     const expected=total();
     if(!Number.isFinite(expected)||expected<=0){showError('Please select priced notes before paying.');return;}
     uploading=true;button.disabled=true;byId('submit-label').textContent='Uploading screenshot…';
