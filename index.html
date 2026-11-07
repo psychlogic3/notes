@@ -392,7 +392,7 @@
     const num=String(i+1).padStart(2,'0');
     const card=document.createElement('article');card.className='sample-card reveal-pending';card.style.setProperty('--reveal-delay',String(i*130)+'ms');
     const preview=document.createElement('div');preview.className='sample-preview';
-    const img=document.createElement('img');img.loading='lazy';img.alt='PsychLogic study notes '+num+' preview';
+    const img=document.createElement('img');img.loading='eager';img.alt='PsychLogic study notes '+num+' preview';
     const fallback=document.createElement('div');fallback.className='sample-fallback';
     const icon=document.createElement('div');icon.className='sample-icon';icon.textContent=num;
     const title=document.createElement('strong');title.textContent='Sample preview coming soon';
