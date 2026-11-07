@@ -78,6 +78,27 @@
     .support-link{display:inline-flex;align-items:center;gap:6px;margin:9px 0 0;padding:8px 12px;border:1px solid #c8b1bf;border-radius:8px;background:#fff;text-decoration:none!important}
     .alert a.support-link:hover{background:#faf2f7}
     @media(prefers-reduced-motion:reduce){.sample-card.reveal-pending{opacity:1;transform:none}.sample-card.reveal-pending.reveal-visible{animation:none}.sample-card,.primary,.submit,.pay-link,.sample-card .sample-preview img{transition:none!important}}
+
+    /* Sample descriptions and reliable reveal fallback. */
+    .sample-description{padding:0 21px 19px;margin:0;color:#6e656a;font-size:12px;line-height:1.72}
+    /* Never hide a sample simply because the scroll observer has not fired. */
+    .sample-card.reveal-pending:not(.reveal-visible){opacity:1;transform:none}
+    /* A small, familiar choice of UPI apps, plus manual-payment fallbacks. */
+    .upi-app-options{margin:10px 0 0;padding:12px;border:1px solid #e8dce4;background:#fffafc;border-radius:10px}
+    .upi-app-options[hidden]{display:none}
+    .upi-app-options strong{font-size:12px;color:#633454;display:block;margin-bottom:9px}
+    .upi-option-links{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .upi-option-links a{display:flex;align-items:center;justify-content:center;text-align:center;padding:10px 9px;border:1px solid #dccbd7;border-radius:8px;text-decoration:none;font-size:12px;font-weight:750;color:#633454;background:white;min-height:40px}
+    .upi-option-links a:hover{background:#f7eef3}
+    .upi-app-help{font-size:11px;color:#786d76;margin:9px 0 0;line-height:1.55}
+    .upi-app-notice{margin:8px 0 0;color:#735b6b;font-size:11px;line-height:1.5}
+    .pay-link:disabled{opacity:.55;cursor:not-allowed}
+    /* Six-second reassurance. This is NOT an upload timeout. */
+    .order-wait-status{margin:13px auto 0;max-width:440px;padding:12px 15px;border-radius:9px;border:1px solid #e7d5e0;background:linear-gradient(100deg,#faf2f7,#f4f3ec);text-align:center;font-size:12px;font-weight:700;color:#633454;line-height:1.7;animation:order-wait-appear .35s ease-out}
+    .order-wait-status[hidden]{display:none}
+    @keyframes order-wait-appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:500px){.upi-option-links{grid-template-columns:1fr 1fr}}
+    @media(prefers-reduced-motion:reduce){.order-wait-status{animation:none}}
   </style>
 </head>
 <body>
@@ -157,11 +178,22 @@
                 </div>
                 <div>
                   <h4>Pay using UPI</h4>
-                  <a id="upi-id-label" class="upi-line upi-id-link" href="#subjects-details" title="Pay using this UPI ID">UPI ID not added yet</a>
+                  <span id="upi-id-label" class="upi-line" title="Copy this UPI ID using the button below">UPI ID not added yet</span>
                   <button type="button" class="copy-upi" id="copy-upi" disabled>Copy UPI ID</button>
                   <div id="upi-pay-actions" class="upi-pay-actions" hidden>
-                    <p class="upi-pay-label">Pay using any UPI app</p>
-                    <a id="pay-link" class="pay-link" role="button" aria-label="Open UPI app to pay for your selected notes">Open UPI App ↗</a>
+                    <p class="upi-pay-label">Pay using a UPI app</p>
+                    <button type="button" id="pay-link" class="pay-link" aria-expanded="false" aria-controls="upi-app-options">Open UPI App ↗</button>
+                    <div class="upi-app-options" id="upi-app-options" hidden>
+                      <strong>Choose the app already set up on your phone</strong>
+                      <div class="upi-option-links">
+                        <a id="upi-googlepay" href="#">Google Pay</a>
+                        <a id="upi-phonepe" href="#">PhonePe</a>
+                        <a id="upi-any" href="#">Any UPI app</a>
+                        <a id="upi-qr-option" href="#payment-qr">Use QR / UPI ID</a>
+                      </div>
+                      <p class="upi-app-help">Some phones open an unrelated app or bank-setup screen. If that happens, return here and use the QR code or copy the UPI ID instead. Check the payee and amount before paying.</p>
+                      <p id="upi-app-notice" class="upi-app-notice" role="status" aria-live="polite"></p>
+                    </div>
                     <p class="pay-screenshot-note">After payment, take a screenshot and upload it below.</p>
                   </div>
                   <p class="setup-hint" id="payment-hint">Select your notes above to enable UPI payment.</p>
@@ -183,6 +215,7 @@
             </fieldset>
             <label class="tick-row" style="margin-top:25px" for="consent"><input required id="consent" type="checkbox" name="Purchase consent" value="Agreed"><span>I confirm my details are accurate and authorize their use to process this notes purchase and verify payment. <span class="req">*</span></span></label>
             <button class="submit" type="submit" id="submit-btn"><span id="submit-label">Submit order for verification</span><span aria-hidden="true">→</span></button>
+            <p id="order-wait-status" class="order-wait-status" role="status" aria-live="polite" hidden></p>
           </form>
           <!-- Hidden transport frame; delivery is checked independently. -->
           <iframe name="order-response-frame" id="order-response-frame" title="Order upload response" class="offscreen" tabindex="-1" aria-hidden="true"></iframe>
@@ -213,11 +246,17 @@
   ];
   // Sample gallery: add/remove a line here to add/remove a visible card.
   // Upload each matching image into the public assets/ folder.
+  // To edit a caption later, change only that sample's title, subtitle or description.
+  // Keep image filenames as sample-note-1.png through sample-note-4.png in assets/.
   const SAMPLE_CATALOG = [
-    {file:'sample-note-1.png', title:'Notes sample · 01', subtitle:'Statistics, methods & the brain'},
-    {file:'sample-note-2.png', title:'Notes sample · 02', subtitle:'Intelligence, personality & neurons'},
-    {file:'sample-note-3.png', title:'Notes sample · 03', subtitle:'Additional handwritten notes'},
-    {file:'sample-note-4.png', title:'Notes sample · 04', subtitle:'More psychology concepts'}
+    {file:'sample-note-1.png', title:'Handwritten Revision Notes', subtitle:'Sample 01 · Learn fast, revise smarter',
+      description:'Colourful, easy-to-follow summaries bring the most important concepts, diagrams and definitions together. Ideal for quick revision when your exam is around the corner.'},
+    {file:'sample-note-2.png', title:'Every Topic, Made Simple', subtitle:'Sample 02 · Detailed explanations',
+      description:'Explore topics in depth with friendly, step-by-step explanations and familiar examples. Difficult terms are explained in plain language, so you can understand more without constantly reaching for a dictionary and prepare confidently for different psychology exams.'},
+    {file:'sample-note-3.png', title:'Visual Revision Boosters', subtitle:'Sample 03 · Connect the key ideas',
+      description:'From psychometric testing and brain functions to statistics and research methods, clear diagrams, comparisons and compact explanations help important ideas stick in your memory.'},
+    {file:'sample-note-4.png', title:'Learn the Why, Not Just the What', subtitle:'Sample 04 · Build exam-ready understanding',
+      description:'Go beyond memorising definitions. Carefully organised, detailed explanations unpack methods, formulas and theories using everyday examples, helping you build understanding and tackle a wide range of psychology exam questions.'}
   ];
   // 2) Add YOUR UPI ID and name. For example: 'yourname@upi' and 'Your Brand'.
   const UPI_ID = 'amang9290@ybl';
@@ -255,31 +294,45 @@
     byId('empty-order').hidden=items.length>0;
     byId('total-label').textContent=items.length && !valid?'Pending prices':money(amount);
     byId('price-tip').textContent=items.length && !valid?'One or more selected subjects need pricing. The store owner must add prices before orders can be accepted.':'The displayed total is calculated from the selected subjects.';
-    const payLink=byId('pay-link'), upiIdLink=byId('upi-id-label');
+    const payLink=byId('pay-link');
     const canPay=items.length>0 && valid && configured();
     byId('upi-pay-actions').hidden=!canPay;
+    payLink.disabled=!canPay;
     if(canPay){
-      const q=new URLSearchParams({pa:UPI_ID,pn:UPI_PAYEE_NAME,am:String(amount),cu:'INR',tn:'PsychLogic notes purchase'});
-      const deepLink='upi://pay?'+q.toString();
-      payLink.href=deepLink;
-      upiIdLink.href=deepLink;
-      byId('payment-hint').textContent='On your phone, tap the button to open a supported UPI app.';
+      // Generic UPI links can launch a different app's setup screen.
+      // Offer explicit app choices, and retain QR / copy-ID fallback.
+      const q=new URLSearchParams({pa:UPI_ID,pn:UPI_PAYEE_NAME,am:amount.toFixed(2),cu:'INR',tn:'PsychLogic notes purchase'});
+      const query=q.toString();
+      const ios=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+      byId('upi-googlepay').href=(ios?'gpay://upi/pay?':'tez://upi/pay?')+query;
+      byId('upi-phonepe').href=(ios?'phonepe://upi/pay?':'phonepe://pay?')+query;
+      byId('upi-any').href='upi://pay?'+query;
+      byId('payment-hint').textContent='Tap Open UPI App and choose your preferred app, or use the QR / UPI ID.';
     }else{
-      payLink.removeAttribute('href');
-      upiIdLink.href='#subjects-details';
+      byId('upi-app-options').hidden=true;
+      payLink.setAttribute('aria-expanded','false');
       byId('payment-hint').textContent='Select your notes above to enable UPI payment.';
     }
   }
   updateSummary();
-  // The UPI button appears only when at least one priced subject is selected.
-  [byId('pay-link'),byId('upi-id-label')].forEach(link=>{
-    link.addEventListener('click',event=>{
-      if(!selected().length || !fullyPriced() || !configured()){
+  byId('pay-link').addEventListener('click',()=>{
+    const panel=byId('upi-app-options'),button=byId('pay-link');
+    if(button.disabled)return;
+    panel.hidden=!panel.hidden;
+    button.setAttribute('aria-expanded',String(!panel.hidden));
+    byId('upi-app-notice').textContent='';
+  });
+  // Desktop browsers cannot reliably open installed mobile UPI apps.
+  ['upi-googlepay','upi-phonepe','upi-any'].forEach(id=>{
+    byId(id).addEventListener('click',event=>{
+      if(!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){
         event.preventDefault();
-        byId('subjects-details').scrollIntoView({behavior:'smooth',block:'center'});
-        byId('subjects-details').querySelector('summary').focus({preventScroll:true});
+        byId('upi-app-notice').textContent='On a computer? Scan the QR with your phone, or copy the UPI ID into your payment app.';
       }
     });
+  });
+  byId('upi-qr-option').addEventListener('click',()=>{
+    byId('upi-app-notice').textContent='Use the QR above or copy the UPI ID. Always verify the recipient and order amount.';
   });
   // Show the QR walkthrough only when the customer asks for help.
   byId('qr-help-toggle').addEventListener('click',()=>{
@@ -347,7 +400,8 @@
     const labels=document.createElement('div');const heading=document.createElement('h3');heading.textContent=item.title;
     const subtitle=document.createElement('p');subtitle.textContent=item.subtitle;labels.append(heading,subtitle);
     const view=document.createElement('button');view.type='button';view.className='text-btn';view.textContent='Enlarge ↗';view.disabled=true;
-    meta.append(labels,view);card.append(preview,meta);gallery.append(card);
+    const description=document.createElement('p');description.className='sample-description';description.textContent=item.description||'';
+    meta.append(labels,view);card.append(preview,meta,description);gallery.append(card);
     img.addEventListener('load',()=>{if(img.naturalWidth>0){img.style.display='block';fallback.style.display='none';view.disabled=false;}});
     img.src='assets/'+item.file;
     if(img.complete && img.naturalWidth>0){img.style.display='block';fallback.style.display='none';view.disabled=false;}
@@ -482,7 +536,33 @@
     clearTimeout(pollTimeout);clearTimeout(pollScriptTimeout);clearTimeout(submissionTimeout);
     if(pollScript){pollScript.remove();pollScript=null;}
   }
-  function releaseButton(){uploading=false;button.disabled=false;byId('submit-label').textContent='Submit order for verification';}
+  const waitStatus=byId('order-wait-status');
+  let waitCountdownTimer=null;
+  function startWaitCountdown(){
+    clearInterval(waitCountdownTimer);
+    let seconds=6;
+    waitStatus.hidden=false;
+    const render=()=>{
+      waitStatus.textContent=seconds>0
+        ? `Please wait — ${seconds} second${seconds===1?'':'s'}. Your order is being processed. Please keep this page open.`
+        : 'Please wait — still checking your order. Do not pay or submit again while verification is pending.';
+    };
+    render();
+    waitCountdownTimer=setInterval(()=>{
+      seconds=Math.max(0,seconds-1);
+      render();
+      if(seconds===0){clearInterval(waitCountdownTimer);waitCountdownTimer=null;}
+    },1000);
+  }
+  function stopWaitCountdown(){
+    clearInterval(waitCountdownTimer);waitCountdownTimer=null;
+    waitStatus.hidden=true;waitStatus.textContent='';
+  }
+  function releaseButton(){
+    stopWaitCountdown();
+    uploading=false;button.disabled=false;
+    byId('submit-label').textContent='Submit order for verification';
+  }
   function confirmOrder(){
     if(!uploading)return;
     cleanupPoll();releaseButton();byId('proof-data').value='';
@@ -583,6 +663,7 @@
     if(!Number.isFinite(amount)||amount<=0){showError('Please select priced notes before paying.');return;}
     if(!navigator.onLine){showError('You appear to be offline. Please reconnect before submitting.');return;}
     uploading=true;button.disabled=true;byId('submit-label').textContent='Checking order service…';
+    startWaitCountdown();
     try{
       if(!await verifyBackend()){
         cleanupPoll();releaseButton();
