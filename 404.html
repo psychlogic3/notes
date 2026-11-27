@@ -4,34 +4,53 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Page not found · PsychLogic</title>
-<link rel="icon" href="https://psychlogic.in/PsychLogic_DP.png">
+<title>Page not found</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:#0E1B2E;
-background:radial-gradient(800px 480px at 85% -10%,rgba(111,211,184,.30),transparent 60%),radial-gradient(600px 400px at -10% 110%,rgba(240,122,90,.16),transparent 60%),#F3F6F9}
-main{max-width:520px;width:100%;background:#fff;border-radius:26px;padding:40px 34px 34px;text-align:center;box-shadow:0 30px 70px rgba(14,27,46,.12);border:1px solid rgba(14,27,46,.06)}
-img{width:210px;max-width:80%;height:auto;margin-bottom:14px}
-h1{font-family:Georgia,"Times New Roman",serif;font-size:30px;margin:0 0 10px;letter-spacing:-.01em}
-p{margin:0 0 26px;color:#4A5B6C;line-height:1.6;font-size:16px}
-nav{display:flex;flex-direction:column;gap:10px}
-a{display:block;padding:13px 18px;border-radius:14px;font-weight:700;text-decoration:none;font-size:15px}
-.main{background:#0E1B2E;color:#fff}.main:hover{background:#0F4C5C}
-.alt{border:1.5px solid #D6E0E8;color:#0E1B2E}.alt:hover{border-color:#0F4C5C}
-small{display:block;margin-top:22px;color:#7A8A99;font-size:13px}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:#FFF7EC;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;color:#3B2A1E;text-align:center}
+svg{width:min(340px,80vw);height:auto}
+h1{font-size:clamp(28px,6vw,40px);margin:10px 0 6px}
+p{margin:0;font-size:17px;color:#7A5C45}
+.ball{animation:bounce 1s cubic-bezier(.3,0,.7,1) infinite alternate}
+.tail{transform-origin:206px 196px;animation:wag .35s ease-in-out infinite alternate}
+.ear{transform-origin:118px 92px;animation:flop 1.2s ease-in-out infinite alternate}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-46px)}}
+@keyframes wag{from{transform:rotate(-14deg)}to{transform:rotate(16deg)}}
+@keyframes flop{from{transform:rotate(0)}to{transform:rotate(-8deg)}}
+@media (prefers-reduced-motion:reduce){.ball,.tail,.ear{animation:none}}
 </style>
 </head>
 <body>
-<main>
-  <img src="https://psychlogic.in/PsychLogic_DP.png" alt="PsychLogic">
-  <h1>This page doesn’t exist</h1>
-  <p>The link may be mistyped, or the page may have moved. Check the address, or go to one of the pages below.</p>
-  <nav>
-    <a class="main" href="https://psychlogic.in">Go to PsychLogic</a>
-    <a class="alt" href="https://gatetrial.psychlogic.in">Try the free GATE Psychology mock</a>
-    <a class="alt" href="https://walink.me/j6oxv9">Ask us on WhatsApp</a>
-  </nav>
-  <small>PsychLogic · Where Psychology Meets Strategy</small>
-</main>
+<svg viewBox="0 0 320 300" role="img" aria-label="A puppy waiting to play with a ball">
+  <ellipse cx="160" cy="272" rx="110" ry="12" fill="#F0DFC8"/>
+  <ellipse cx="262" cy="272" rx="20" ry="5" fill="#E8D2B6"/>
+  <g class="tail"><path d="M204 198c22-6 36-22 40-40" stroke="#C98A4B" stroke-width="12" stroke-linecap="round" fill="none"/></g>
+  <ellipse cx="160" cy="210" rx="58" ry="52" fill="#E2A15C"/>
+  <ellipse cx="160" cy="222" rx="32" ry="34" fill="#FBE3C2"/>
+  <rect x="118" y="238" width="22" height="34" rx="11" fill="#E2A15C"/>
+  <rect x="180" y="238" width="22" height="34" rx="11" fill="#E2A15C"/>
+  <ellipse cx="129" cy="270" rx="15" ry="8" fill="#FBE3C2"/>
+  <ellipse cx="191" cy="270" rx="15" ry="8" fill="#FBE3C2"/>
+  <g class="ear"><path d="M112 82c-26 2-34 38-24 62 6 14 22 8 26-6z" fill="#A9673A"/></g>
+  <path d="M208 82c26 2 34 38 24 62-6 14-22 8-26-6z" fill="#A9673A"/>
+  <circle cx="160" cy="118" r="56" fill="#E2A15C"/>
+  <ellipse cx="160" cy="140" rx="34" ry="26" fill="#FBE3C2"/>
+  <ellipse cx="136" cy="110" rx="7" ry="9" fill="#3B2A1E"/>
+  <ellipse cx="184" cy="110" rx="7" ry="9" fill="#3B2A1E"/>
+  <circle cx="138" cy="107" r="2.5" fill="#fff"/>
+  <circle cx="186" cy="107" r="2.5" fill="#fff"/>
+  <ellipse cx="160" cy="128" rx="10" ry="7" fill="#3B2A1E"/>
+  <path d="M150 140q10 9 20 0" stroke="#3B2A1E" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M154 144q6 22 12 0z" fill="#F27A8A"/>
+  <ellipse cx="122" cy="132" rx="8" ry="5" fill="#F4B48A" opacity=".7"/>
+  <ellipse cx="198" cy="132" rx="8" ry="5" fill="#F4B48A" opacity=".7"/>
+  <g class="ball">
+    <circle cx="262" cy="248" r="20" fill="#E5484D"/>
+    <path d="M244 240q18 10 36 0" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <circle cx="255" cy="240" r="4" fill="#fff" opacity=".55"/>
+  </g>
+</svg>
+<h1>Page not found</h1>
+<p>Our puppy looked everywhere, but this page doesn’t exist.</p>
 </body>
 </html>
